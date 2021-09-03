@@ -1,0 +1,94 @@
+<canvas width="1550" height="720"></canvas>
+
+<script>
+
+    var tela = document.querySelector('canvas');
+    var pincel = tela.getContext('2d');
+
+    pincel.fillStyle = 'lightgray';
+    pincel.fillRect(0, 0, 6000, 4000);
+
+    var raio = 10;
+    var x = 0;
+    var y = 0;
+    var acertos = 0;
+    
+
+
+    function desenhaCirculo(x, y, raio, cor) {
+
+        pincel.fillStyle = cor;
+        pincel.beginPath();
+        pincel.arc(x, y, raio, 0, 2 * Math.PI);
+        pincel.fill();
+    }
+
+
+    function posicionaAlvo(){
+        x = Math.random()* (1550 - 100) + 100;
+        y = Math.random()* (720 - 100) + 100;
+    }
+
+    function desenhaAlvo(){
+        if(tempo >= 0){
+        limpaTela();  
+        desenhaTexto();      
+        desenhaTexto2();
+        posicionaAlvo();
+        desenhaCirculo(x,y, raio + 20, 'red'); // maior círculo
+        desenhaCirculo(x,y, raio + 10, 'white');
+        desenhaCirculo(x,y, raio, 'red'); // menor circulo
+        }
+    }
+
+    function limpaTela() {
+
+        pincel.clearRect(0, 0, 1550, 720);
+    }
+
+
+    function dispara(evento) {
+
+        var xClicado = evento.pageX - tela.offsetLeft;
+        var yClicado = evento.pageY - tela.offsetTop;
+
+        if (xClicado > x-10 && xClicado < x+10 && yClicado > y-10 && yClicado < y+10) {
+            acertos ++;
+            console.log("Acertos:" + acertos);
+        }
+
+       // lógica de acerto?
+    }
+
+    function desenhaTexto() {
+        var tela = document.querySelector('canvas');
+        var pincel = tela.getContext('2d');
+
+        pincel.font='20px Georgia';
+        pincel.fillStyle='black';
+        pincel.fillText(tempo + " segundos restantes", 30, 50);    
+        
+    }
+    function desenhaTexto2() {
+        var tela = document.querySelector('canvas');
+        var pincel = tela.getContext('2d');
+
+        pincel.font='20px Georgia';
+        pincel.fillStyle='black';
+        pincel.fillText(acertos + " pontos", 1000, 50);    
+        
+    }
+    
+    var tempo = 60;
+    function cronometro(){
+        tempo --;
+    }
+
+   
+    setInterval(desenhaAlvo,1000);
+    setInterval(cronometro,1000);
+    
+
+    tela.onclick = dispara;
+
+</script>
